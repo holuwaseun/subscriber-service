@@ -1,0 +1,56 @@
+openapi: 3.0.0
+
+info:
+  title: Subscriber Service
+  description: Pangea Subscriber Service
+  version: 0.0.1
+
+servers:
+  - url: 'http://127.0.0.1:1996/subscriber/api/v1/'
+    description: 'Local Server'
+
+tags:
+  - name: 'Listen'
+
+paths:
+  /:topic:
+    post:
+      tags: ['Listen']
+      description: 'listen for published messages to a topic'
+      operationId: 'processMessage'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/publish'
+      responses:
+        '200':
+          description: 'topic subscription message received'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/process-success'
+
+components:
+  schemas:
+    publish:
+      type: object
+      description: 'publish message'
+      example: {"age": 9, "user": "adams"}
+
+    process-success:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'server message'
+          example: 'OK'
+
+  parameters:
+    topic:
+      in: path
+      name: topic
+      required: true
+      schema:
+        type: string
+      description: 'topic'
